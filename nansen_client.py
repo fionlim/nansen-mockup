@@ -10,11 +10,6 @@ API_BASE = os.getenv("NANSEN_BASE_URL", "https://api.nansen.ai/api/beta")
 API_KEY = os.getenv("apiKey")
 CANDLES_PATH = os.getenv("NANSEN_CANDLES_PATH", "")
 
-HEADERS = {
-    "apiKey": API_KEY,
-    "Content-Type": "application/json"
-}
-
 class NansenClient:
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
         self.base_url = base_url or API_BASE
@@ -23,7 +18,7 @@ class NansenClient:
             "Content-Type": "application/json",
         }
         if not self.headers["apiKey"]:
-            raise ValueError("Missing apiKey in environment. Add it to .env")
+            raise ValueError("Missing apiKey. Add it to .env file.")
 
     def _post(self, path: str, json_body: Dict, timeout: int = 45):
         url = f"{self.base_url}{path}"

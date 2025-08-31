@@ -8,39 +8,57 @@ from dotenv import load_dotenv
 from views.smart_money import render_smart_money
 from views.token_screener import render_token_screener, render_flow_intelligence
 
-load_dotenv()
-
-API_KEY = os.getenv("apiKey")
-
 DEFAULT_PAYLOAD = {
-    "parameters": {
-        "smFilter": [
-            "180D Smart Trader",
-            "Fund",
-            "Smart Trader"
-        ],
-        "chains": [
-            "ethereum",
-            "solana"
-        ],
-        "includeStablecoin": True,
-        "includeNativeTokens": True,
-        "excludeSmFilter": []
-    },
-    "pagination": {
-        "page": 1,
-        "recordsPerPage": 100
+        "parameters": {
+            "smFilter": [
+                "180D Smart Trader",
+                "Fund",
+                "Smart Trader"
+            ],
+            "chains": [
+                "ethereum",
+                "solana"
+            ],
+            "includeStablecoin": True,
+            "includeNativeTokens": True,
+            "excludeSmFilter": []
+        },
+        "pagination": {
+            "page": 1,
+            "recordsPerPage": 100
+        }
     }
-}
 
 
 def main():
     st.set_page_config(page_title="Smart Money Dashboard", layout="wide")
-    st.title("Smart Money Dashboard")
+    
+    # Handle authentication
+    if not st.user.is_logged_in:
+        st.title("Smart Money Dashboard")
+        st.write("Please log in to access the dashboard.")
+        if st.button("Log in"):
+            st.login()
+        return
+    
+    # User is logged in - show logout button and user info
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.title("Smart Money Dashboard")
+    with col2:
+        if st.button("Log out"):
+            st.logout()
+            return
+    
+    st.write(f"Hello, {st.user.name}!")
 
-    if not API_KEY:
-        st.error("Missing API key. Add 'apiKey' to your .env file.")
-        st.stop()
+    # Check API key after login
+    # load_dotenv()
+    # api_key = os.getenv("apiKey")
+    # print("API KEY: {api_key}")
+    # if not api_key:
+    #     st.error("Missing API key. Add 'apiKey' to your .env file.")
+    #     st.stop()
 
     with st.sidebar:
         st.header("Filters")
