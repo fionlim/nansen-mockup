@@ -73,51 +73,51 @@ def render_token_screener(parameters: Dict, pagination: Dict):
             st.bar_chart(vol_series)
 
         # Selection for price history / candlestick
-        st.markdown("### Price History")
-        col1, col2, col3 = st.columns([2, 2, 1])
-        with col1:
-            symbols = sig["tokenSymbol"].dropna().unique().tolist()
-            selected_symbol = st.selectbox("Select token", options=symbols)
-        with col2:
-            filtered = sig[sig["tokenSymbol"] == selected_symbol]
-            if filtered.empty:
-                st.warning("Selected token not in current results.")
-                return
-            selected_row = filtered.iloc[0]
-            selected_address = selected_row["tokenAddressHex"]
-            selected_chain = selected_row["chain"]
-            timeframe = st.selectbox("Timeframe", options=["1d", "7d", "30d"], index=0)
-        with col3:
-            run_candles = st.button("Load Chart")
+        # st.markdown("### Price History")
+        # col1, col2, col3 = st.columns([2, 2, 1])
+        # with col1:
+        #     symbols = sig["tokenSymbol"].dropna().unique().tolist()
+        #     selected_symbol = st.selectbox("Select token", options=symbols)
+        # with col2:
+        #     filtered = sig[sig["tokenSymbol"] == selected_symbol]
+        #     if filtered.empty:
+        #         st.warning("Selected token not in current results.")
+        #         return
+        #     selected_row = filtered.iloc[0]
+        #     selected_address = selected_row["tokenAddressHex"]
+        #     selected_chain = selected_row["chain"]
+        #     timeframe = st.selectbox("Timeframe", options=["1d", "7d", "30d"], index=0)
+        # with col3:
+        #     run_candles = st.button("Load Chart")
 
-        if run_candles:
-            # Use Token God Mode flows for price history
-            # Build date range from timeframe selection (approximate: last N days)
-            try:
-                import datetime as _dt
-                days = 1 if timeframe == "1d" else 7 if timeframe == "7d" else 30
-                date_to = _dt.date.today()
-                date_from = date_to - _dt.timedelta(days=days)
-                flows_payload = {
-                    "parameters": {
-                        "chain": selected_chain,
-                        "tokenAddress": selected_address,
-                        "date": {"from": str(date_from), "to": str(date_to)},
-                        "label": "smart_money"
-                    },
-                    "pagination": {"page": 1, "recordsPerPage": 500}
-                }
-                flows = client.token_flows(flows_payload)
-                df_f = pd.DataFrame(flows)
-                if not df_f.empty and "blockDate" in df_f.columns and "priceUsd" in df_f.columns:
-                    df_f = df_f.rename(columns={"blockDate": "time"})
-                    df_f["time"] = pd.to_datetime(df_f["time"], errors="coerce")
-                    # Render price line chart; if candles desired, we would need OHLC data
-                    st.line_chart(df_f.set_index("time")["priceUsd"], height=300)
-                else:
-                    st.info("No price history available from flows for this selection.")
-            except Exception as e:
-                st.error(f"Failed to load price history: {e}")
+        # if run_candles:
+        #     # Use Token God Mode flows for price history
+        #     # Build date range from timeframe selection (approximate: last N days)
+        #     try:
+        #         import datetime as _dt
+        #         days = 1 if timeframe == "1d" else 7 if timeframe == "7d" else 30
+        #         date_to = _dt.date.today()
+        #         date_from = date_to - _dt.timedelta(days=days)
+        #         flows_payload = {
+        #             "parameters": {
+        #                 "chain": selected_chain,
+        #                 "tokenAddress": selected_address,
+        #                 "date": {"from": str(date_from), "to": str(date_to)},
+        #                 "label": "smart_money"
+        #             },
+        #             "pagination": {"page": 1, "recordsPerPage": 500}
+        #         }
+        #         flows = client.token_flows(flows_payload)
+        #         df_f = pd.DataFrame(flows)
+        #         if not df_f.empty and "blockDate" in df_f.columns and "priceUsd" in df_f.columns:
+        #             df_f = df_f.rename(columns={"blockDate": "time"})
+        #             df_f["time"] = pd.to_datetime(df_f["time"], errors="coerce")
+        #             # Render price line chart; if candles desired, we would need OHLC data
+        #             st.line_chart(df_f.set_index("time")["priceUsd"], height=300)
+        #         else:
+        #             st.info("No price history available from flows for this selection.")
+        #     except Exception as e:
+        #         st.error(f"Failed to load price history: {e}")
 
         st.markdown("**Market metrics vs Smart Money movements**")
         _corr_table(df_s)

@@ -34,12 +34,12 @@ def main():
     st.set_page_config(page_title="Smart Money Dashboard", layout="wide")
     
     # Handle authentication
-    if not getattr(st.user, "email", None):
+    if not st.user.is_logged_in:
         st.title("Smart Money Dashboard")
         st.write("Please log in to access the dashboard.")
         if st.button("Log in"):
-            st.login()
-        return
+            st.login("")
+        st.stop()
     
     # User is logged in - show logout button and user info
     col1, col2 = st.columns([3, 1])
@@ -48,7 +48,6 @@ def main():
     with col2:
         if st.button("Log out"):
             st.logout()
-            return
     
     st.write(f"Hello, {st.user.name}!")
 
