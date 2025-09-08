@@ -38,7 +38,7 @@ def main():
         st.title("Smart Money Dashboard")
         st.write("Please log in to access the dashboard.")
         if st.button("Log in"):
-            st.login("")
+            st.login()
         st.stop()
     
     # User is logged in - show logout button and user info
