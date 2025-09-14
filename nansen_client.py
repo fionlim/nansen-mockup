@@ -34,9 +34,18 @@ class NansenClient:
     def smart_money_inflows(self, payload: Dict) -> List[Dict]:
         return self._post("/smart-money/inflows", payload)
 
+    def smart_money_netflow(self, payload: Dict) -> List[Dict]:
+        return self._post("/smart-money/netflow", payload)
+
     def smart_money_holdings(self, payload: Dict) -> List[Dict]:
         return self._post("/smart-money/holdings", payload)
-
+    
+    def smart_money_dex_trades(self, payload: Dict) -> List[Dict]:
+        return self._post("/smart-money/dex-trades", payload)   
+    
+    def smart_money_dcas(self, payload: Dict) -> List[Dict]:
+        return self._post("/smart-money/dcas", payload)  
+    
     def token_screener(self, payload: Dict) -> List[Dict]:
         return self._post("/token-screener", payload)
 
