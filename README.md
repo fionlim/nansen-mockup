@@ -20,6 +20,26 @@ apiKey=your_nansen_api_key_here
 pip install -r requirements.txt
 ```
 
+### 3. Streamlit Secrets Configuration
+
+Before running the Streamlit app, you must create a `.streamlit/secrets.toml` file in the project root. This file should contain your Nansen API key and authentication credentials:
+
+```toml
+apiKey = "YOUR_NANSEN_API_KEY"
+
+[auth]
+redirect_uri = "YOUR_REDIRECT_URI"
+cookie_secret = "YOUR_COOKIE_SECRET"
+client_id = "YOUR_CLIENT_ID"
+client_secret = "YOUR_CLIENT_SECRET"
+server_metadata_url = "YOUR_SERVER_METADATA_URL"
+```
+
+**Note:**
+
+- Replace the example values with your actual credentials.
+- This file is required for authentication and API access in the Streamlit app.
+
 ## Usage
 
 ### Option 1: Python Script (Recommended)
@@ -100,7 +120,7 @@ Top 3 Tokens Accumulated by Smart Money (Last 24h)
    Price Change 24h: 2.34%
 
 2. USDC (USD Coin)
-   Contract: 0xA0b86a33E6441b8C4C8C8C8C8C8C8C8C8C8C8C8
+   Contract: 0xA0b86a33E6441b8C4C8C8C8C8C8C8C8C8C8C8
    Chain: ethereum
    Accumulation Volume: $8,765,432.10
    Smart Money Wallets: 32

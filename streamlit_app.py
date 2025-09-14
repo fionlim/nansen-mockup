@@ -35,7 +35,7 @@ def main():
     
     # Handle authentication
     if not st.user.is_logged_in:
-        st.title("Smart Money Dashboard")
+        st.title("Nansen.ai API Dashboard")
         st.write("Please log in to access the dashboard.")
         if st.button("Log in"):
             st.login()
@@ -44,7 +44,7 @@ def main():
     # User is logged in - show logout button and user info
     col1, col2 = st.columns([3, 1])
     with col1:
-        st.title("Smart Money Dashboard")
+        st.title("Nansen.ai API Dashboard")
     with col2:
         if st.button("Log out"):
             st.logout()
@@ -59,8 +59,8 @@ def main():
     #     st.error("Missing API key. Add 'apiKey' to your .env file.")
     #     st.stop()
 
-    with st.sidebar:
-        st.header("Filters")
+    tab_smart, tab_screener = st.tabs(["Smart Money", "Token Screener"])
+    with tab_smart:
         include_stable = st.checkbox("Include Stablecoins", value=True)
         include_native = st.checkbox("Include Native Tokens", value=True)
         page_size = st.slider("Records per page", 10, 200, 100, 10)
@@ -80,15 +80,13 @@ def main():
         )
         submitted = st.button("Run Query")
 
-    payload = json.loads(json.dumps(DEFAULT_PAYLOAD))
-    payload["parameters"]["includeStablecoin"] = include_stable
-    payload["parameters"]["includeNativeTokens"] = include_native
-    payload["parameters"]["chains"] = selected_chains
-    payload["parameters"]["smFilter"] = selected_filters
-    payload["pagination"]["recordsPerPage"] = page_size
+        payload = json.loads(json.dumps(DEFAULT_PAYLOAD))
+        payload["parameters"]["includeStablecoin"] = include_stable
+        payload["parameters"]["includeNativeTokens"] = include_native
+        payload["parameters"]["chains"] = selected_chains
+        payload["parameters"]["smFilter"] = selected_filters
+        payload["pagination"]["recordsPerPage"] = page_size
 
-    tab_smart, tab_screener = st.tabs(["Smart Money", "Token Screener"])
-    with tab_smart:
         if submitted:
             render_smart_money(payload, new_token_max_days)
 
